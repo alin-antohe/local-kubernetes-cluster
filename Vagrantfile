@@ -2,7 +2,7 @@
 # vi: set ft=ruby :
 
 coreos_release_channel = "stable"
-coreos_release_version = "1911.3.0"
+coreos_release_version = "1911.4.0"
 
 machines = {
   "master.zone-a.k8s.local" => { ip: "192.168.0.10", primary: true,  autostart: true, cpus: 1, memory: 2048 },
@@ -21,14 +21,14 @@ Vagrant.configure("2") do |config|
   end
 
   machines.each do |machine, settings|
-    config.vm.define machine, primary: settings[:primary], autostart: settings[:autostart] do |vm|
-      vm.vm.hostname = machine
-      vm.vm.network "private_network", ip: settings[:ip]
+    config.vm.define machine, primary: settings[:primary], autostart: settings[:autostart] do |node|
+      node.vm.hostname = machine
+      node.vm.network "private_network", ip: settings[:ip]
 
-      vm.vm.provider "virtualbox" do |mvb|
-        mvb.name = machine
-        mvb.cpus = settings[:cpus]
-        mvb.memory = settings[:memory]
+      node.vm.provider "virtualbox" do |nvb|
+        nvb.name = machine
+        nvb.cpus = settings[:cpus]
+        nvb.memory = settings[:memory]
       end
     end
   end
