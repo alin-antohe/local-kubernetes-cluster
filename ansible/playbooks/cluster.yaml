@@ -1,7 +1,22 @@
 %YAML 1.2
 ---
-  - hosts: all
+  - name: Kubernetes cluster preflight checklist
+    hosts: all
+    roles:
+      - kubernetes-preflight
 
-    tasks:
-    - debug:
+  - name: Install and configure the Kubernetes master
+    hosts: master
+    roles:
+      - kubernetes-master
+
+  - name: Install and configure etcd
+    hosts: etcd
+    roles:
+      - kubernetes-etcd
+
+  - name: Install and configure the Kubernetes nodes
+    hosts: node
+    roles:
+      - kubernetes-node
 ...
