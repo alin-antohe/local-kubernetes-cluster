@@ -2,6 +2,7 @@
 ---
   - name: Kubernetes cluster preflight checklist
     hosts: all
+    gather_facts: no
     roles:
       - kubernetes-preflight
 

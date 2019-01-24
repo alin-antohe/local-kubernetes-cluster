@@ -1,2 +1,32 @@
+%YAML 1.2
 ---
-# tasks file for kubernetes-preflight
+  - name: Install iproute package required for fact gathering
+    dnf:
+      name: iproute
+      state: latest
+
+  - name: Gather facts
+    setup:
+
+  - name: Unique hostname
+    assert:
+      that: hostvars | json_query('*.inventory_hostname') | select('equalto', inventory_hostname) | list | length == 1
+      fail_msg: The hostname is not unique
+
+  - name: Unique MAC address
+    # assert:
+    #   that: hostvars | json_query('*.ansible_default_ipv4.macaddress') | select('equalto', hostvars[inventory_hostname]['ansible_default_ipv4']['macaddress']) | list | length == 1
+    #   fail_msg: The MAC address is not unique
+    debug:
+      msg: "{{ hostvars | json_query('*.*.macaddress') }}"
+
+  - name: Unique product UUID
+    assert:
+      that: hostvars | json_query('*.ansible_product_uuid') | select('equalto', hostvars[inventory_hostname]['ansible_product_uuid']) | list | length == 1
+      fail_msg: The main board product UUID is not unique
+    # debug:
+      # msg: "{{ hostvars | json_query('*.ansible_product_uuid') }}"
+      # msg: "{{ hostvars | json_query('*.ansible_product_uuid') | select('equalto', hostvars[inventory_hostname]['ansible_product_uuid']) | list | length }}"
+
+  # - name: Swap disabled
+...
